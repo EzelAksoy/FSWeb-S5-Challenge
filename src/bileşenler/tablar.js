@@ -1,28 +1,37 @@
+import axios from "axios";
 const Tablar = (konu) => {
-  // GÖREV 3
-  // ---------------------
-  // Tek argümanı bir dizi ("konu") olan bu fonksiyonu uygulayın.
-  // Örnek olarak, konu dizisi şu şekilde deklare edilmişse ['javascript', 'bootstrap', 'teknoloji']
-  // fonksiyon aşağıdaki şekilde bir DOM öğesi döndürecek.
-  // Kullanılan etiketler, öğelerin hiyerarşisi ve öznitelikleri sağlanan işaretlemeyle eşleşmelidir!
-  // Öğelerin içindeki metin, "textContent" özelliği kullanılarak ayarlanacaktır ("innerText" DEĞİL).
-  //
-  // <div class="topics">
-  //   <div class="tab">javascript</div>
-  //   <div class="tab">bootstrap</div>
-  //   <div class="tab">teknoloji</div>
-  // </div>
-  //
-}
+  const divTopics = document.createElement("div");
+  divTopics.className = "topics";
+  for (let i = 0; i < konu.length; i++) {
+    const konu_ = document.createElement("div");
+    konu_.classList.add("tab");
+    konu_.textContent = konu[i];
+    divTopics.appendChild(konu_);
+  }
+  console.log(divTopics);
+  return divTopics;
+};
 
 const tabEkleyici = (secici) => {
-  // GÖREV 4
-  // ---------------------
-  // Tek argümanı olarak bir css seçici alan bu işlevi uygulayın.
-  // Konuları bu uç noktadan almalıdır: `http://localhost:5001/api/konular` (console.log ile test edin!).
-  // Yanıtın içindeki konu dizisini bulun ve Tablar bileşenini kullanarak tabları oluşturun.
-  // Tabları, fonksiyona iletilen seçiciyle eşleşen DOM'daki öğeye ekleyin.
-  //
-}
+  axios
+    .get("http://localhost:5001/api/konular")
+    .then((reponse) => {
+      console.log(reponse);
+      let konular = reponse.data.konular;
+      const _secici = document.querySelector(secici);
+      _secici.appendChild(Tablar(reponse.data.konular));
+    })
+    .catch((error) => {
+      console.log("hata bulundu" + error);
+    });
+};
 
-export { Tablar, tabEkleyici }
+// GÖREV 4
+// ---------------------
+// Tek argümanı olarak bir css seçici alan bu işlevi uygulayın.
+// Konuları bu uç noktadan almalıdır: `http://localhost:5001/api/konular` (console.log ile test edin!).
+// Yanıtın içindeki konu dizisini bulun ve Tablar bileşenini kullanarak tabları oluşturun.
+// Tabları, fonksiyona iletilen seçiciyle eşleşen DOM'daki öğeye ekleyin.
+//
+
+export { Tablar, tabEkleyici };
